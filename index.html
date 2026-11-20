@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I’m Really Sorry ❤️</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Reenie+Beanie&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-top: #ece6f2;
+    --bg-bottom: #f7e2e2;
+    --ink: #2b2540;
+    --muted: #7b7390;
+    --rose: #c2415d;
+    --rose-dark: #9e3049;
+    --paper: rgba(255, 255, 255, 0.55);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-top: #1d1a2b;
+      --bg-bottom: #2d1b27;
+      --ink: #f1e8ee;
+      --muted: #a79db5;
+      --rose: #ee7b94;
+      --rose-dark: #f4a0b2;
+      --paper: rgba(255, 255, 255, 0.05);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom)) fixed;
+    color: var(--ink);
+    font-family: "Newsreader", Georgia, "Times New Roman", serif;
+    font-size: clamp(1.15rem, 1rem + 0.7vw, 1.4rem);
+    line-height: 1.7;
+  }
+  main {
+    max-width: 38rem;
+    margin: 0 auto;
+    padding: 12vh 1.5rem 20vh;
+  }
+  .heart {
+    display: block;
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-bottom: 2.5rem;
+    color: var(--rose);
+    animation: beat 2.6s ease-in-out infinite;
+  }
+  @keyframes beat {
+    0%, 60%, 100% { transform: scale(1); }
+    70% { transform: scale(1.18); }
+    80% { transform: scale(1); }
+    88% { transform: scale(1.1); }
+  }
+  h1 {
+    font-weight: 500;
+    font-size: clamp(2.6rem, 2rem + 4vw, 4.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0 0 3rem;
+  }
+  .para {
+    margin: 0 0 1.6rem;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: arrive 1.1s ease forwards;
+  }
+  .para.big {
+    font-style: italic;
+    font-size: 1.25em;
+    line-height: 1.45;
+    color: var(--rose-dark);
+  }
+  @keyframes arrive { to { opacity: 1; transform: none; } }
+  button {
+    font: inherit;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 0.7rem 1.6rem;
+    border: 1.5px solid var(--rose);
+    background: transparent;
+    color: var(--rose-dark);
+    transition: background 0.2s, color 0.2s;
+  }
+  button:hover { background: var(--rose); color: #fff; }
+  button:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
+  button.solid { background: var(--rose); color: #fff; }
+  button.solid:hover { background: var(--rose-dark); }
+  .hint { color: var(--muted); font-size: 0.8em; margin-top: 0.8rem; }
+  #ask { margin-top: 2.5rem; padding: 1.8rem; border-radius: 1.2rem; background: var(--paper); }
+  #ask p { margin: 0 0 1.4rem; font-size: 1.15em; }
+  .choices { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+  #reply { margin-top: 1.4rem; font-style: italic; color: var(--rose-dark); }
+  .sig { font-family: "Reenie Beanie", cursive; font-size: 3rem; line-height: 1; margin-top: 3rem; color: var(--rose-dark); }
+  [hidden] { display: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .heart { animation: none; }
+    .para { animation: none; opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <svg class="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 2.8 5 6.1 5c2.1 0 3.6 1.2 4.4 2.5h3C14.3 6.2 15.8 5 17.9 5c3.3 0 5.2 3.3 3.7 6.7C19.5 16.4 12 21 12 21z"/>
+  </svg>
+
+  <h1 id="title"></h1>
+  <div id="letter" aria-live="polite"></div>
+
+  <div id="nextWrap">
+    <button id="next" class="solid" type="button">Keep reading</button>
+  </div>
+
+  <section id="ask" hidden>
+    <p id="question"></p>
+    <div class="choices">
+      <button id="yes" class="solid" type="button"></button>
+      <button id="time" type="button"></button>
+    </div>
+    <p id="reply" hidden></p>
+  </section>
+
+  <div class="sig" id="sig" hidden></div>
+</main>
+
+<script>
+  // ✏️ EDIT THIS PART: everything on the page comes from here.
+  const CONFIG = {
+    herName: "Shineyyy",
+    yourName: "Ansh",
+    title: "I’m really sorry,",
+    lines: [
+      "I’m sorry for whatever i did. You didn’t deserve it, and I know it hurt you.",
+      "Gelu, there's something I genuinely want you to understand,",
+      "I love your childish, playful, affectionate and loving side That's something I've always adored about you. ",
+      "I don't expect you to agree with everything I say, nor do I want to control your personality.",
+      "But lately, I feel that our disagreements, anger and occasional coldness are becoming more prominent than our understanding of each other.",
+     "I understand that you have your own struggles, fears and frustrations. I've tried to respect them, including things like our discussions about having a baby someday.",
+       "But I also have feelings, expectations and vulnerabilities.",
+"I don't want a relationship where one person has to dominate and the other has to constantly adjust. I want us to be equals.",
+ "I want both of us to feel comfortable expressing ourselves without fearing the other's reaction.",
+
+"I'm willing to improve my communication, control my anger and become more emotionally mature.",
+"But I also need us both to work towards being kinder to each other.",
+"I don't want to win arguments against you. I want us to win against the problems that are affecting us.",
+      { big: true, text: "You matter to me more than being right ever will." },
+      "From now on, I’ll [one real promise you to be more loving and understanding. Not just said today, but shown over time.",
+      "I made this page because some things I wanted to say properly, not in a rushed text."
+    ],
+    question: "Whenever you’re ready, can we talk?",
+    yesLabel: "Yes, let’s talk",
+    timeLabel: "I need some time",
+    yesReply: "Thank you. I’ll call you. I love you.",
+    timeReply: "Take all the time you need. I’ll be here, and I’m not going anywhere."
+  };
+
+  const $ = (id) => document.getElementById(id);
+  let shown = 0;
+
+  $("title").textContent = CONFIG.title + " " + CONFIG.herName;
+  $("question").textContent = CONFIG.question;
+  $("yes").textContent = CONFIG.yesLabel;
+  $("time").textContent = CONFIG.timeLabel;
+  $("sig").textContent = "— " + CONFIG.yourName;
+
+  function reveal() {
+    const item = CONFIG.lines[shown];
+    const p = document.createElement("p");
+    p.className = "para" + (typeof item === "object" && item.big ? " big" : "");
+    p.textContent = typeof item === "object" ? item.text : item;
+    $("letter").appendChild(p);
+    shown++;
+
+    if (shown >= CONFIG.lines.length) {
+      $("nextWrap").hidden = true;
+      $("ask").hidden = false;
+      $("sig").hidden = false;
+      $("ask").scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      p.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
+  function answer(text) {
+    const r = $("reply");
+    r.textContent = text;
+    r.hidden = false;
+  }
+
+  $("next").addEventListener("click", reveal);
+  $("yes").addEventListener("click", () => answer(CONFIG.yesReply));
+  $("time").addEventListener("click", () => answer(CONFIG.timeReply));
+
+  reveal();
+</script>
+</body>
+</html>
